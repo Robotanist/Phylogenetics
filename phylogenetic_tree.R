@@ -14,7 +14,7 @@ fasta <- readFasta("/Users/solomon.champion/Desktop/FASTA/loci/matK/HPDL/")
 #Then write the object out
 writeFasta(fasta, "/Users/solomon.champion/Desktop/FASTA/loci/matK/matK.fasta")
 
-
+# Alternatively paste path to alignment from MEGA, Geneious, etc. here
 fasta <- "/Users/solomon.champion/Desktop/FASTA/loci/matK/matK.fasta"
 
 # load the sequences from the file
@@ -33,29 +33,32 @@ aligned <- muscle(seqs)
 
 aligned <- as.phyDat(aligned, type = "DNA", levels = NULL, return.index = TRUE)
 
-# perform alignment with DECIPHER package
+# perform alignment with DECIPHER package instead of MUSCLE (optional)
 # aligned <- AlignSeqs(seqs)
 
 # view the alignment in a browser (optional)
 # BrowseSeqs(aligned, highlight=0)
 
 # write the alignment to a new FASTA file (optional)
-# writeXStringSet(aligned, file="Users/solomon.champion/Desktop/FASTA/loci/matK/matK_aligned.fasta")
+# writeXStringSet(aligned, file="/Users/solomon.champion/Desktop/FASTA/loci/matK/matK_aligned.fasta")
 
 # calculates pairwise distance
 pairwise <- dist.ml(aligned, model = "F81", exclude = "none", bf = NULL, Q = NULL,
                     k = 1L, shape = 1)
 
-# bootstrapping
 
+# unweighted pair group method with arithmetic mean (UPGMA) from phangorn package
 treeUPGMA  <- upgma(pairwise)
 
+# fits likelihood
 fit <- pml(treeUPGMA, aligned)
 
 fit <- optim.pml(fit, rearrangements="NNI")
 set.seed(123)
+
+# bootstrapping
 bs <- bootstrap.pml(fit, bs=100, optNni=TRUE)
 treeBS <- plotBS(fit$tree,bs)
 
 # open tree in FigTree
-write.tree(treeBS, "Users/solomon.champion/Desktop/FASTA/loci/matK/matK.tree")
+write.tree(treeBS, "/Users/solomon.champion/Desktop/FASTA/loci/matK/matK.tree")
