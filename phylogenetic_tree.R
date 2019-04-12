@@ -8,8 +8,14 @@ library(DECIPHER)
 library(phangorn)
 library(muscle)
 
-# specify the path to the FASTA file (in quotes)
-fasta <- "/Users/solomon.champion/Desktop/FASTA/loci/rpl16/rpl16.fasta"
+# reads in whole directory
+fasta <- readFasta("/Users/solomon.champion/Desktop/FASTA/loci/matK/HPDL/")
+
+#Then write the object out
+writeFasta(fasta, "/Users/solomon.champion/Desktop/FASTA/loci/matK/matK.fasta")
+
+
+fasta <- "/Users/solomon.champion/Desktop/FASTA/loci/matK/matK.fasta"
 
 # load the sequences from the file
 # change "DNA" to "RNA" or "AA" if necessary
@@ -34,7 +40,7 @@ aligned <- as.phyDat(aligned, type = "DNA", levels = NULL, return.index = TRUE)
 # BrowseSeqs(aligned, highlight=0)
 
 # write the alignment to a new FASTA file (optional)
-# writeXStringSet(aligned, file="/Users/solomon.champion/Desktop/FASTA/loci/rpl16/rpl16_aligned.fasta")
+# writeXStringSet(aligned, file="Users/solomon.champion/Desktop/FASTA/loci/matK/matK_aligned.fasta")
 
 # calculates pairwise distance
 pairwise <- dist.ml(aligned, model = "F81", exclude = "none", bf = NULL, Q = NULL,
@@ -52,4 +58,4 @@ bs <- bootstrap.pml(fit, bs=100, optNni=TRUE)
 treeBS <- plotBS(fit$tree,bs)
 
 # open tree in FigTree
-write.tree(treeBS, "/Users/solomon.champion/Desktop/FASTA/loci/rpl16/rpl16.tree")
+write.tree(treeBS, "Users/solomon.champion/Desktop/FASTA/loci/matK/matK.tree")
