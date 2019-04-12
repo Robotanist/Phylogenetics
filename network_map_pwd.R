@@ -7,15 +7,15 @@ library(ShortRead)
 library(DECIPHER)
 library(phangorn)
 library(reshape)
+library(qgraph)
 
-# no Pattern, Whole Directory
-fasta <- readFasta("/Users/solomon.champion/Desktop/FASTA/loci/ITS/HPDL")
+# reads in whole directory
+fasta <- readFasta("/Users/solomon.champion/Desktop/FASTA/loci/ITS/HPDL/")
 
-#Then write the object out to fasta file
-
+#Then write the object out
 writeFasta(fasta, "/Users/solomon.champion/Desktop/FASTA/loci/ITS/ITS.fasta")
 
-# specify the path to the FASTA file (in quotes)
+
 fasta <- "/Users/solomon.champion/Desktop/FASTA/loci/ITS/ITS.fasta"
 
 # load the sequences from the file
@@ -46,33 +46,14 @@ pairwise <- dist.ml(ML, model = "JC69", exclude = "none", bf = NULL, Q = NULL,
                     k = 1L, shape = 1)
 
 
-treeUPGMA  <- upgma(pairwise)
-# treeNJ  <- NJ(dm)
-
-layout(matrix(c(1,2), 2, 1), height=c(1,2))
-par(mar = c(0,0,2,0)+ 0.1)
-plot(treeUPGMA, main="UPGMAtree")
-write.tree(treeUPGMA, "/Users/solomon.champion/Desktop/FASTA/loci/ITS/ITS.tree")
-
 #make pwd into matrix
 pairwise_matrix <- as.matrix(pairwise)
 
 write.csv(pairwise_matrix, "pairwise.csv")
 
-
-##############################################
-# Data Dictionary
-# variable name = Species + Accession #
-# data type = Continous value
-# description = Pairwise Distance from Internally Transcribed Spacer Nucleotide Sequences
-
 pairwise <- read.csv("/Users/solomon.champion/Desktop/pwd/pairwise.csv")
 dist_m <- as.matrix(dist(pairwise))
 dist_mi <- 1/dist_m # one over, as qgraph takes similarity matrices as input
-library(qgraph)
 jpeg('ITS.jpg', width=1000, height=1000, unit='px')
 qgraph(dist_mi, layout='spring', vsize=3)
 dev.off()
-
-
-#################################################
